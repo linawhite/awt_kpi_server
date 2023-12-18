@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000";
+const API_URL = "https://wt.kpi.fei.tuke.sk/api/article?max=20&offset=";
 
 //an array, defining the routes
 export default [
@@ -64,32 +64,75 @@ function createHtml4Article(targetElm, current, totalCount) {
     );
 }
 
-async function fetchAndDisplayArticles(targetElm, current) {
-    let currentNum = parseInt(current);
+function fetchAndDisplayArticles(targetElm, current) {
+    const offset = (current - 1) * 20; // Adjust offset based on the current page
+    const apiUrl = `https://wt.kpi.fei.tuke.sk/api/article?max=20&offset=${offset}`;
 
-    try {
-        const response = await fetch(
-            `${API_URL}/paginated-data?page=${currentNum}`
-        );
-        const data = await response.json();
+    function reqListener() {
+        if (this.status == 200) {
+            const responseData = JSON.parse(this.responseText);
 
-        document.getElementById(targetElm).innerHTML = Mustache.render(
-            document.getElementById("template-articles").innerHTML,
-            {
-                articles: data.data,
-                currPage: currentNum,
-                pageCount: data.pagination.totalPages,
-                prevPage: currentNum - 1 > 0 ? currentNum - 1 : null,
+            // Calculate pageCount based on the max value and total count
+            const pageCount = Math.ceil(responseData.meta.totalCount / 20);
+
+            // Set currPage, pageCount, and articles in the data for rendering
+            const data4rendering = {
+                currPage: parseInt(current),
+                pageCount: pageCount,
+                articles: responseData.articles,
+                prevPage: parseInt(current) > 1 ? parseInt(current) - 1 : null,
                 nextPage:
-                    currentNum + 1 <= data.pagination.totalPages
-                        ? currentNum + 1
+                    parseInt(current) < pageCount
+                        ? parseInt(current) + 1
                         : null,
-            }
-        );
-    } catch (e) {
-        alert(`Error: ${e.message}`);
+            };
+
+            // Render the template with the updated data
+            document.getElementById(targetElm).innerHTML = Mustache.render(
+                document.getElementById("template-articles").innerHTML,
+                data4rendering
+            );
+        } else {
+            const errMessage = `ERROR in function fetchAndDisplayArticles: ${this.statusText}`;
+            document.getElementById(targetElm).innerHTML = Mustache.render(
+                document.getElementById("template-articles-error").innerHTML,
+                { errMessage }
+            );
+        }
     }
+
+    var ajax = new XMLHttpRequest();
+    ajax.addEventListener("load", reqListener);
+    ajax.open("GET", apiUrl, true);
+    ajax.send();
 }
+
+// async function fetchAndDisplayArticles(targetElm, current) {
+//     let currentNum = parseInt(current);
+
+//     try {
+//         const response = await fetch(
+//             `${API_URL}/paginated-data?page=${currentNum}`
+//         );
+//         const data = await response.json();
+
+//         document.getElementById(targetElm).innerHTML = Mustache.render(
+//             document.getElementById("template-articles").innerHTML,
+//             {
+//                 articles: data.data,
+//                 currPage: currentNum,
+//                 pageCount: data.pagination.totalPages,
+//                 prevPage: currentNum - 1 > 0 ? currentNum - 1 : null,
+//                 nextPage:
+//                     currentNum + 1 <= data.pagination.totalPages
+//                         ? currentNum + 1
+//                         : null,
+//             }
+//         );
+//     } catch (e) {
+//         alert(`Error: ${e.message}`);
+//     }
+// }
 
 async function fetchAndDisplayArticleDetail(targetElm, id) {
     try {
@@ -146,9 +189,9 @@ async function saveArticleDescription(id, description) {
     return response.json();
 }
 
-async function deleteArticle() {
-    // DELETE request using fetch with async/await
-    const element = document.getElementById("article-delete");
-    await fetch(`${API_URL}/deleteArticle`, { method: "DELETE" });
-    element.innerHTML = "Delete successful";
-}
+// async function deleteArticle() {
+//     // DELETE request using fetch with async/await
+//     const element = document.getElementById("article-delete");
+//     await fetch(`${API_URL}/deleteArticle`, { method: "DELETE" });
+//     element.innerHTML = "Delete successful";
+// }

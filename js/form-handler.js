@@ -1,7 +1,3 @@
-// window.addEventListener("load", (event) => {
-//     displayFeedback();
-// });
-
 window.addEventListener("hashchange", function () {
     if (window.location.hash === "#yourRelevantRoute") {
         displayFeedback();
@@ -9,13 +5,6 @@ window.addEventListener("hashchange", function () {
 });
 
 function formHandler() {
-    // document
-    //     .getElementById("feedback-form")
-    //     .addEventListener("submit", function (event) {
-    //         event.preventDefault();
-
-    //check
-
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const imgLink = document.getElementById("imageURL").value;
@@ -72,8 +61,6 @@ function formHandler() {
             }
         }
     }
-
-    // });
 }
 
 function saveFormData(formData) {

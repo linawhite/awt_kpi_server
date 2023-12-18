@@ -40,15 +40,34 @@
         <!--Templates for dynamically inserted html-->
 
         <script id="template-home" type="text/template">
-            <h2>Welcome!</h2>
-            <p>
-                Welcome to my page!  My name is <i>Štefan Korečko.</i>
-                I created this demo for you to learn
-                about parametrised hash routers.
+            <h3>Welcome to Educate - Your Gateway to Global Learning Excellence!<br></h3>
+            <p>Embark on a journey of knowledge and exploration with Educate,
+                your premier destination for insightful information about the finest universities across the globe.
+                As you step into our virtual campus, we invite you to join a community passionate about education,
+                innovation, and the pursuit of academic excellence.<br> Uncover the Best Universities Worldwide:<br>
+                At Educate, we curate a treasure trove of articles, reviews, and features spotlighting the crème de
+                la crème of universities worldwide. Whether you're a prospective student seeking the perfect academic
+                fit or an avid learner hungry for the latest trends in higher education, our blog is your compass to
+                navigate the vast landscape of global universities. <br> Dive into In-Depth University Profiles:<br>
+                Explore comprehensive profiles that go beyond rankings, delving into the unique attributes, academic programs,
+                and vibrant campus cultures that set each institution apart. From renowned Ivy League establishments to hidden
+                gems across continents, Educate is your go-to source for an insider's perspective on top-tier universities. <br>
+                Stay Informed with the Latest Trends:<br>
+                Our dedicated team of writers and researchers keeps a finger on the pulse of the education sector.
+                Stay informed about emerging trends, cutting-edge research,
+                and innovative teaching methodologies shaping the landscape of higher education.
+                Educate is not just a blog; it's your real-time connection to the dynamic world of academia.<br>
+                Engage, Connect, and Share:<br> Educate is more than just a blog;
+                it's a thriving community of learners, educators, and enthusiasts.
+                Engage in vibrant discussions, share your experiences, and connect with like-minded individuals
+                who share your passion for learning. Together, let's build a global network that transcends borders and
+                fosters a collective appreciation for the transformative power of education.<br>
+                Embark on Your Educational Odyssey:<br> Whether you're a seasoned academic or a prospective student
+                taking your first steps into the world of higher education, Educate is here to guide you on your
+                educational odyssey. Join us in celebrating the diversity and excellence of universities around the world
+                - because education knows no boundaries!<br> Welcome to Educate - Where Knowledge Knows No Borders.<br>
             </p>
         </script>
-
-        <!-- fetch("http://localhost:3000/paginated-data?page=6").then(res => res.json()).then(data => console.log(data)) -->
 
         <script id="template-articles" type="text/template">
             <p>
@@ -66,15 +85,26 @@
             </nav>
 
             {{#articles}}
-            <article >
+            <article>
                 <a href="#articleDetail/{{id}}">{{title}}</a>
                 <p>
-                by {{author}}
+                    by {{author}}
                 </p>
-                <img src="{{image}}" alt="">
+                <img src="{{encodeURIComponent(imageLink)}}" alt="" onerror="this.style.display='none';">
+
             </article>
             {{/articles}}
 
+            <footer class="menuLink"><a href="#articles/1">Back to the menu</a></footer>
+        </script>
+        <script id="template-articles-error" type="text/template">
+
+            <article>
+                <h2>Articles acquisition failed</h2>
+                <p>
+                    {{errMessage}}
+                </p>
+            </article>
             <footer  class="menuLink"><a href="#menuTitle">Back to the menu</a></footer>
         </script>
 
@@ -103,17 +133,6 @@
                 });
                 element.innerHTML = "Delete successful";
             }
-        </script>
-
-        <script id="template-articles-error" type="text/template">
-
-            <article>
-                <h2>Articles acquisition failed</h2>
-                <p>
-                    {{errMessage}}
-                </p>
-            </article>
-            <footer  class="menuLink"><a href="#menuTitle">Back to the menu</a></footer>
         </script>
 
         <script id="template-visitorOpinions" type="text/template">
@@ -238,55 +257,6 @@
                 <div class="user-info"></div>
             </section>
         </script>
-
-        <!-- google sign-in -->
-
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-
-        <script>
-            function onSignIn(googleUser) {
-                var profile = googleUser.getBasicProfile();
-                console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                console.log("Name: " + profile.getName());
-                console.log("Image URL: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
-            }
-        </script>
-        <!-- <div id="content">
-            <p>Prihláste sa:</p>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
-        </div>
-        <script>
-            function onSignIn(googleUser) {
-                // získame profil používateľa
-                var profile = googleUser.getBasicProfile();
-
-                console.log("Úplné meno: " + profile.getName());
-                console.log("Meno: " + profile.getGivenName());
-                console.log("Priezvisko: " + profile.getFamilyName());
-                console.log("Obrázok profilu: " + profile.getImageUrl());
-                console.log("Email: " + profile.getEmail());
-
-                // autorizačný token
-                var id_token = googleUser.getAuthResponse().id_token;
-                console.log("ID Token: " + id_token);
-
-                // zmeníme content element
-                document.querySelector("#content").innerHTML =
-                    "<p>Vitajte " +
-                    profile.getGivenName() +
-                    "! Kliknite pre <a href='#' onclick='signOut();'>odhlásenie</a>.</p>";
-            }
-
-            function signOut() {
-                var auth2 = gapi.auth2.getAuthInstance();
-                auth2.signOut().then(function () {
-                    alert("Boli ste odhlásený...");
-                    // znovu načítame stránku a zobrazíme tlačidlo pre prihlásenie
-                    location.reload();
-                });
-            }
-        </script> -->
 
         <main>
             <div class="start">

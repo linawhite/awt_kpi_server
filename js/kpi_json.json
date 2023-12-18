@@ -1,0 +1,14 @@
+{
+    "articles": [
+        {
+            "id": 20874,
+            "author": "Nikita",
+            "dateCreated": "2023-12-09T14:42:32Z",
+            "imageLink": "https://cmx.weightwatchers.com/assets-proxy/weight-watchers/image/upload/q_auto/v1594406683/visitor-site/prod/ca/burgers_masthead_xtkxft?auto=webp",
+            "lastUpdated": "2023-12-18T12:21:48Z",
+            "title": "Burger",
+            "tags": ["Food"]
+        }
+    ],
+    "meta": { "totalCount": 527, "max": 10, "offset": 0 }
+}
