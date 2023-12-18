@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="google-signin-client_id"
+            content="987663133021-bppal7qpbt5mk2n2vke4r91gjrcbqno8.apps.googleusercontent.com" />
+        <script
+            src="https://apis.google.com/js/platform.js"
+            async
+            defer></script>
+        <link type="text/css" rel="stylesheet" href="./css/style.css" />
+        <link type="text/css" rel="stylesheet" href="./css/fonts.css" />
+        <link rel="stylesheet" href="./css/form.css" />
+
+        <title>EducateEu</title>
+    </head>
+    <body>
+        <header>
+            <div class="logo">
+                <img src="./fig/header-logo.svg" alt="educate logo" />
+                <p class="header-title">Educare</p>
+            </div>
+
+            <nav class="header-nav">
+                <a href="#home" class="header-nav-section">Home</a>
+                <a href="#articles/1" class="header-nav-section">Articles</a>
+                <a href="#visitorOpinions" class="header-nav-section">
+                    Visitor opinions
+                </a>
+                <a href="#addOpinion">Feedback</a>
+            </nav>
+
+            <button>Contact us</button>
+        </header>
+
+        <section id="router-view"></section>
+
+        <!--Templates for dynamically inserted html-->
+
+        <script id="template-home" type="text/template">
+            <h2>Welcome!</h2>
+            <p>
+                Welcome to my page!  My name is <i>Štefan Korečko.</i>
+                I created this demo for you to learn
+                about parametrised hash routers.
+            </p>
+        </script>
+
+        <!-- fetch("http://localhost:3000/paginated-data?page=6").then(res => res.json()).then(data => console.log(data)) -->
+
+        <script id="template-articles" type="text/template">
+            <p>
+                Displaying page {{currPage}} of {{pageCount}} pages.
+            </p>
+
+            <nav>
+                {{#prevPage}}
+                <a href="#articles/{{prevPage}}"><< Previous page</a>
+                {{/prevPage}}
+
+                {{#nextPage}}
+                <a href="#articles/{{nextPage}}">Next page >></a>
+                {{/nextPage}}
+            </nav>
+
+            {{#articles}}
+            <article >
+                <a href="#articleDetail/{{id}}">{{title}}</a>
+                <p>
+                by {{author}}
+                </p>
+                <img src="{{image}}" alt="">
+            </article>
+            {{/articles}}
+
+            <footer  class="menuLink"><a href="#menuTitle">Back to the menu</a></footer>
+        </script>
+
+        <script id="template-articleDetail" type="text/template">
+            <div id="article-description">{{description}}</div>
+            <button id="article-edit">Edit</button>
+            <button id="article-delete" onclick="deleteArticle()">Delete</button>
+            <a id="article-backToMain" href="http://127.0.0.1:5500/#articles/1">Back to the menu</a>
+            {{#comments}}
+            <article >
+                <a href="#articleDetail/{{id}}">{{name}}</a>
+                <p>
+                    {{text}}
+                </p>
+
+            </article>
+            {{/comments}}
+        </script>
+
+        <script>
+            async function deleteArticle() {
+                // DELETE request using fetch with async/await
+                const element = document.getElementById("article-delete");
+                await fetch(`http://localhost:3000/deleteArticle`, {
+                    method: "DELETE",
+                });
+                element.innerHTML = "Delete successful";
+            }
+        </script>
+
+        <script id="template-articles-error" type="text/template">
+
+            <article>
+                <h2>Articles acquisition failed</h2>
+                <p>
+                    {{errMessage}}
+                </p>
+            </article>
+            <footer  class="menuLink"><a href="#menuTitle">Back to the menu</a></footer>
+        </script>
+
+        <script id="template-visitorOpinions" type="text/template">
+            <div class="user-info"></div>
+        </script>
+
+        <script src="./js/form-handler.js"></script>
+
+        <script id="template-addOpinion" type="text/template">
+            <section class="feedback">
+                <form id="feedback-form">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required />
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required />
+
+                    <label for="imageURL">Image URL:</label>
+                    <input type="url" id="imageURL" name="imageURL" />
+
+                    <p>Please select your occupation:</p>
+                    <div class="radio-wrapper">
+                        <label for="student">I am a student</label>
+
+                        <input
+                            type="radio"
+                            id="student"
+                            name="occupation"
+                            value="student" />
+                    </div>
+                    <div class="radio-wrapper">
+                        <label for="worker">I work</label>
+
+                        <input
+                            type="radio"
+                            id="worker"
+                            name="occupation"
+                            value="works" />
+                    </div>
+
+                    <div class="radio-wrapper">
+                        <label for="working-student">I work and study</label>
+
+                        <input
+                            type="radio"
+                            id="working-student"
+                            name="occupation"
+                            value="works and studies" />
+                    </div>
+
+                    <p>Please select your age:</p>
+                    <div class="radio-wrapper">
+                        <label for="age1">0 - 30</label>
+                        <input type="radio" id="age1" name="age" value="30" />
+                    </div>
+                    <div class="radio-wrapper">
+                        <label for="age2">31 - 60</label><br />
+                        <input type="radio" id="age2" name="age" value="60" />
+                    </div>
+                    <div class="radio-wrapper">
+                        <label for="age3">61 - 100</label><br /><br />
+                        <input type="radio" id="age3" name="age" value="100" />
+                    </div>
+
+                    <label>Choose languages which you speak:</label>
+
+                    <br /><br />
+
+                    <div class="radio-wrapper">
+                        <label for="english">English</label>
+                        <input
+                            type="checkbox"
+                            id="english"
+                            name="language"
+                            checked />
+                    </div>
+
+                    <div class="radio-wrapper">
+                        <label for="slovak">Slovak</label>
+                        <input type="checkbox" id="slovak" name="language" />
+                    </div>
+
+                    <label for="opinion">Your Opinion:</label>
+                    <textarea
+                        id="opinion"
+                        name="opinion"
+                        rows="4"
+                        required></textarea>
+
+                    <label for="keywords">Keywords:</label>
+                    <input
+                        type="text"
+                        id="keywords"
+                        name="keywords"
+                        list="keywordList" />
+                    <datalist id="keywordList">
+                        <option value="harvard"></option>
+                        <option value="education"></option>
+                        <option value="universities"></option>
+                        <option value="chance"></option>
+                        <option value="opportunity"></option>
+                        <option value="learning"></option>
+                        <option value="study"></option>
+                        <option value="student"></option>
+                        <option value="usa"></option>
+                        <option value="america"></option>
+                        <option value="world"></option>
+                        <option value="best"></option>
+                        <option value="benefit"></option>
+                        <option value="education"></option>
+                        <option value="science"></option>
+                        <option value="qualification"></option>
+                        <option value="professionalism"></option>
+                        <option value="expertise"></option>
+                        <option value="competitiveness"></option>
+                    </datalist>
+
+                    <button type="submit" onclick="formHandler()">Submit</button>
+                    <button type="reset">Reset</button>
+                </form>
+
+                <div class="user-info"></div>
+            </section>
+        </script>
+
+        <!-- google sign-in -->
+
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+        <script>
+            function onSignIn(googleUser) {
+                var profile = googleUser.getBasicProfile();
+                console.log("ID: " + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                console.log("Name: " + profile.getName());
+                console.log("Image URL: " + profile.getImageUrl());
+                console.log("Email: " + profile.getEmail()); // This is null if the 'email' scope is not present.
+            }
+        </script>
+        <!-- <div id="content">
+            <p>Prihláste sa:</p>
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        </div>
+        <script>
+            function onSignIn(googleUser) {
+                // získame profil používateľa
+                var profile = googleUser.getBasicProfile();
+
+                console.log("Úplné meno: " + profile.getName());
+                console.log("Meno: " + profile.getGivenName());
+                console.log("Priezvisko: " + profile.getFamilyName());
+                console.log("Obrázok profilu: " + profile.getImageUrl());
+                console.log("Email: " + profile.getEmail());
+
+                // autorizačný token
+                var id_token = googleUser.getAuthResponse().id_token;
+                console.log("ID Token: " + id_token);
+
+                // zmeníme content element
+                document.querySelector("#content").innerHTML =
+                    "<p>Vitajte " +
+                    profile.getGivenName() +
+                    "! Kliknite pre <a href='#' onclick='signOut();'>odhlásenie</a>.</p>";
+            }
+
+            function signOut() {
+                var auth2 = gapi.auth2.getAuthInstance();
+                auth2.signOut().then(function () {
+                    alert("Boli ste odhlásený...");
+                    // znovu načítame stránku a zobrazíme tlačidlo pre prihlásenie
+                    location.reload();
+                });
+            }
+        </script> -->
+
+        <main>
+            <div class="start">
+                <div class="wrapper">
+                    <h1 class="start-title">
+                        Start learning<br />
+                        with us now
+                    </h1>
+                    <h2 class="start-subtitle">
+                        Tips, articles, and updates on K-12 and higher education
+                        abroad from our experts.
+                    </h2>
+                    <a href="./form.html" class="feedback"
+                        >Give us a feedback</a
+                    >
+                </div>
+
+                <img src="./fig/start.png" alt="boy with books" />
+            </div>
+
+            <div class="welcome">
+                <img src="./fig/layer.png" alt="" />
+
+                <div class="welcome-text_wrapper">
+                    <h1>Welcome to the online centers</h1>
+                    <ul class="welcome-reasons">
+                        <li class="welcome-reasons-item">
+                            Start learning from your experience
+                        </li>
+                        <li class="welcome-reasons-item">
+                            Enhance your skills with us now
+                        </li>
+                        <li class="welcome-reasons-item">
+                            Do your favorite course
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="articles">
+                <div class="article">
+                    <img src="./fig/articles/building.jpg" alt="" />
+                    <h3>Harvard</h3>
+                    <div class="author-wrapper">
+                        <img src="./fig/articles/author.svg" alt="" />
+
+                        <a
+                            href="mailto:joannawelick@gmail.com"
+                            class="article__author"
+                            >Joanna Welick
+                        </a>
+                    </div>
+                    <a href="./article1.html" class="post-link">View Post</a>
+                </div>
+
+                <div class="article">
+                    <img src="./fig/articles/garden.jpg" alt="" />
+                    <h3>Massachusetts <br />Institute of Technology</h3>
+                    <div class="author-wrapper">
+                        <img src="./fig/articles/author.svg" alt="" />
+                        <a
+                            href="mailto:adriannalasocki@gmail.com"
+                            class="article__author"
+                            >Adrianna Lasocki</a
+                        >
+                    </div>
+
+                    <a href="./article2.html" class="post-link">View Post</a>
+                </div>
+
+                <div class="article">
+                    <img src="./fig/articles/couple.jpg" alt="" />
+                    <h3>Stanford University</h3>
+                    <div class="author-wrapper">
+                        <img src="./fig/articles/author.svg" alt="" />
+                        <a
+                            href="mailto:karllagerfeld@gmail.com"
+                            class="article__author"
+                            >Karl Lagerfeld
+                        </a>
+                    </div>
+                    <a href="./article3.html" class="post-link">View Post</a>
+                </div>
+
+                <div class="article">
+                    <img src="./fig/articles/room.jpg" alt="" />
+                    <h3>Stanford University</h3>
+                    <div class="author-wrapper">
+                        <img src="./fig/articles/author.svg" alt="" />
+                        <a
+                            href="mailto:karllagerfeld@gmail.com"
+                            class="article__author"
+                            >Karl Lagerfeld</a
+                        >
+                    </div>
+
+                    <a href="./article3.html" class="post-link">View Post</a>
+                </div>
+            </div>
+
+            <div class="register">
+                <div class="register-slogan">
+                    <h1>
+                        Start learning by<br />creating free account<br />and
+                        get register
+                    </h1>
+                    <img src="./fig/sign-up.png" alt="" />
+                </div>
+                <div class="register-form">
+                    <form>
+                        <input type="text" placeholder="Your name" />
+                        <input
+                            type="text"
+                            name="submit"
+                            placeholder="Your email address" />
+
+                        <input type="submit" class="submit" value="Submit" />
+                    </form>
+                </div>
+            </div>
+
+            <div class="community">
+                <div class="community-text">
+                    <h1>
+                        Start growing with<br />
+                        our community
+                    </h1>
+                    <h2>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit
+                    </h2>
+                    <button class="community-btn">Join community</button>
+                </div>
+                <img src="./fig/big_woman.png" alt="" />
+            </div>
+        </main>
+
+        <footer>
+            <div class="wrapper-top">
+                <div class="logo">
+                    <img src="./fig/header-logo.svg" alt="educate logo" />
+                    <p class="header-title">Educare</p>
+                </div>
+
+                <div class="wrapper-links">
+                    <div class="social-media">
+                        <h3>Follow Us</h3>
+                        <div class="social-media-icons">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="33"
+                                height="33"
+                                viewBox="0 0 33 33"
+                                fill="none">
+                                <g clip-path="url(#clip0_8_48)">
+                                    <path
+                                        d="M16.5 -0.0351562C7.38268 -0.0351562 -0.0361328 7.3816 -0.0361328 16.4999C-0.0361328 25.6182 7.38268 33.035 16.5 33.035C25.6172 33.035 33.0361 25.6182 33.0361 16.4999C33.0361 7.3816 25.6172 -0.0351562 16.5 -0.0351562ZM16.5 31.9336C7.99009 31.9336 1.0673 25.0098 1.0673 16.4999C1.0673 7.99003 7.99009 1.06622 16.5 1.06622C25.0098 1.06622 31.9326 7.99003 31.9326 16.4999C31.9326 25.0098 25.0098 31.9336 16.5 31.9336Z"
+                                        fill="black"
+                                        fill-opacity="0.5" />
+                                    <path
+                                        d="M25.5688 11.3911C25.6832 11.1794 25.7775 10.9574 25.8504 10.728C25.8841 10.6216 25.8848 10.5075 25.8523 10.4007C25.8199 10.2939 25.7558 10.1995 25.6685 10.1299C25.5813 10.0603 25.475 10.0188 25.3636 10.0109C25.2523 10.003 25.1412 10.029 25.045 10.0855C24.5165 10.3995 23.9445 10.6333 23.3475 10.7796C22.6228 10.1255 21.6817 9.76293 20.7055 9.76172C20.1751 9.76213 19.6503 9.86962 19.1625 10.0778C18.6747 10.2859 18.2339 10.5904 17.8666 10.973C17.4994 11.3556 17.2131 11.8084 17.0251 12.3043C16.837 12.8002 16.751 13.3289 16.7723 13.8589C14.453 13.5669 12.3352 12.3933 10.8581 10.5816C10.8015 10.5129 10.7291 10.459 10.6472 10.4243C10.5653 10.3895 10.4762 10.3751 10.3876 10.3822C10.2989 10.3893 10.2132 10.4177 10.1379 10.465C10.0625 10.5122 9.99966 10.577 9.95468 10.6538C9.61646 11.2343 9.43262 11.8918 9.4207 12.5635C9.40879 13.2353 9.5692 13.8989 9.88662 14.491C9.80877 14.5042 9.73398 14.5314 9.66593 14.5715C9.58255 14.6246 9.5139 14.6979 9.46632 14.7846C9.41874 14.8713 9.39376 14.9686 9.39368 15.0675C9.39368 16.238 9.91446 17.3125 10.7539 18.0427L10.7178 18.0788C10.6544 18.1504 10.6108 18.2374 10.5913 18.3311C10.5718 18.4248 10.577 18.5219 10.6064 18.6129C10.7815 19.159 11.0737 19.6602 11.4628 20.0815C11.8518 20.5028 12.3282 20.834 12.8587 21.0518C11.7693 21.5833 10.5501 21.7905 9.34625 21.6489C9.2225 21.6363 9.09807 21.6651 8.99244 21.7308C8.88682 21.7965 8.80597 21.8954 8.76256 22.0119C8.72087 22.1294 8.72009 22.2574 8.76034 22.3754C8.80058 22.4933 8.8795 22.5942 8.98428 22.6616C10.6209 23.712 12.5248 24.2701 14.4695 24.2693C20.8426 24.2693 24.6521 19.0925 24.6521 14.0878L24.651 13.9187C25.2687 13.4365 25.8052 12.8586 26.2402 12.2068C26.3061 12.1083 26.3384 11.9912 26.3326 11.8728C26.3267 11.7544 26.2828 11.6411 26.2075 11.5496C26.1322 11.4581 26.0294 11.3932 25.9144 11.3647C25.7994 11.3361 25.6782 11.3454 25.5688 11.3911ZM23.7693 13.2009C23.6945 13.2547 23.6343 13.3265 23.5943 13.4095C23.5543 13.4925 23.5358 13.5843 23.5404 13.6763C23.5466 13.8125 23.5497 13.9507 23.5497 14.0868C23.5497 18.55 20.1537 23.1669 14.4705 23.1669C13.4569 23.1674 12.4505 22.9973 11.4933 22.6637C12.6396 22.444 13.7165 21.9524 14.6335 21.2303C14.7227 21.1599 14.7881 21.0636 14.8206 20.9547C14.8531 20.8458 14.8511 20.7295 14.815 20.6217C14.7789 20.5139 14.7104 20.4199 14.6188 20.3526C14.5272 20.2852 14.4171 20.2478 14.3035 20.2454C13.8588 20.2369 13.4224 20.124 13.0294 19.9159C12.6364 19.7077 12.2978 19.4101 12.0409 19.0471C12.3018 19.0296 12.5576 18.9863 12.8061 18.9192C12.9264 18.887 13.0322 18.815 13.1063 18.7149C13.1804 18.6149 13.2184 18.4926 13.2141 18.3682C13.2098 18.2438 13.1634 18.1245 13.0826 18.0297C13.0017 17.935 12.8912 17.8705 12.769 17.8467C12.2668 17.7446 11.8018 17.5078 11.4238 17.1618C11.0458 16.8157 10.769 16.3734 10.6229 15.8822C10.8972 15.9513 11.1788 15.9915 11.4603 16.0008C11.7027 15.9998 11.9275 15.8513 12.0027 15.6182C12.078 15.3851 11.9893 15.1283 11.7841 14.9922C11.2989 14.6689 10.9253 14.2037 10.7143 13.6602C10.5033 13.1166 10.4653 12.5212 10.6054 11.9552C12.3967 13.7932 14.8155 14.8877 17.3787 15.0201C17.5602 15.0211 17.719 14.9561 17.8293 14.8231C17.9397 14.6901 17.9819 14.5137 17.9427 14.3446C17.8017 13.7372 17.8648 13.1002 18.1222 12.5323C18.3797 11.9643 18.8171 11.4971 19.3669 11.2028C19.9167 10.9086 20.5481 10.8037 21.1635 10.9045C21.7789 11.0053 22.3439 11.306 22.7711 11.7603C22.8351 11.8286 22.9154 11.8795 23.0046 11.9082C23.0937 11.9369 23.1886 11.9424 23.2805 11.9243C23.4507 11.8902 23.6187 11.851 23.7848 11.8057C23.7099 11.8617 23.6321 11.9137 23.5517 11.9614C23.4448 12.0269 23.3633 12.1269 23.3208 12.2448C23.2783 12.3628 23.2773 12.4918 23.3179 12.6104C23.3585 12.7291 23.4383 12.8304 23.5441 12.8976C23.65 12.9648 23.7756 12.994 23.9003 12.9803L24.088 12.9565C23.9846 13.0417 23.8783 13.1232 23.7693 13.2009Z"
+                                        fill="black"
+                                        fill-opacity="0.5" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_8_48">
+                                        <rect
+                                            width="33"
+                                            height="33"
+                                            fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="32"
+                                height="33"
+                                viewBox="0 0 32 33"
+                                fill="none">
+                                <g clip-path="url(#clip0_8_52)">
+                                    <path
+                                        d="M19.5151 12.3254C18.8371 12.3254 18.3351 12.5018 17.9421 12.7245C17.8791 12.4935 17.6721 12.3244 17.4281 12.3749H14.4441C14.1491 12.3244 13.9101 12.5708 14.0011 12.8905V24.2343C13.9101 24.523 14.1491 24.7705 14.4441 24.7499H17.4281C17.7231 24.7705 17.9621 24.523 17.9621 24.2188L17.9611 17.3631C17.9601 17.36 17.9491 17.032 18.1501 16.8062C18.3111 16.6268 18.5881 16.535 18.9711 16.535C19.6091 16.535 19.8931 16.8041 19.9991 17.4064V24.2188C19.8941 24.523 20.1331 24.7705 20.4281 24.7499H23.5731C23.8681 24.7705 24.1071 24.523 24.0011 24.2188V17.1774C24.1061 13.5969 21.6331 12.3254 19.5151 12.3254ZM23.0381 23.7187H20.9621V17.4064C20.9621 16.1885 20.1991 15.4336 18.9721 15.4336C18.2781 15.4336 17.7381 15.644 17.3661 16.0585C16.8491 16.636 16.8891 17.3682 17.0001 17.5312V23.7187H14.9781V13.4268H16.8941V13.7733C16.8933 13.8765 16.9208 13.9779 16.9733 14.0657C17.0259 14.1535 17.1014 14.2243 17.1912 14.2699C17.2811 14.3154 17.3815 14.3339 17.4811 14.3233C17.5806 14.3126 17.6753 14.2731 17.7541 14.2095L17.8941 14.0981C18.2991 13.7692 18.7181 13.4278 19.5161 13.4278C20.3421 13.4278 23.0391 13.699 23.0391 17.1785L23.0381 23.7187ZM11.0001 7.18359C9.87806 7.18359 8.96606 8.12409 8.96606 9.28116C8.96606 10.4382 9.87806 11.3787 11.0001 11.3787C12.1221 11.3787 13.0341 10.4382 13.0341 9.28116C13.0341 8.12409 12.1221 7.18359 11.0001 7.18359ZM11.0001 10.2773C10.4681 10.2773 10.0341 9.82978 10.0341 9.28116C10.0341 8.73253 10.4681 8.28497 11.0001 8.28497C11.5321 8.28497 11.9661 8.73253 11.9661 9.28116C11.9661 9.82978 11.5321 10.2773 11.0001 10.2773ZM12.4281 12.3244H9.46006C9.16506 12.3244 8.92606 12.5708 9.00006 12.8905V24.2343C8.92606 24.523 9.16506 24.7705 9.46006 24.7499H12.4281C12.7231 24.7705 12.9621 24.523 12.9621 24.2188V12.8751C12.9621 12.729 12.9058 12.5889 12.8057 12.4857C12.7055 12.3824 12.5697 12.3244 12.4281 12.3244ZM12.0001 23.7187H9.99407V13.4268H12.0001V23.7187Z"
+                                        fill="black"
+                                        fill-opacity="0.5" />
+                                    <path
+                                        d="M16.0001 -0.0351562C7.15807 -0.0351562 -0.0339355 7.3816 -0.0339355 16.4999C-0.0339355 25.6182 7.15807 33.035 16.0001 33.035C24.8421 33.035 32.0341 25.6182 32.0341 16.4999C32.0341 7.3816 24.8421 -0.0351562 16.0001 -0.0351562ZM16.0001 31.9336C7.74807 31.9336 1.03406 25.0098 1.03406 16.4999C1.03406 7.99003 7.74807 1.06622 16.0001 1.06622C24.2521 1.06622 30.9661 7.99003 30.9661 16.4999C30.9661 25.0098 24.2521 31.9336 16.0001 31.9336Z"
+                                        fill="black"
+                                        fill-opacity="0.5" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_8_52">
+                                        <rect
+                                            width="32"
+                                            height="33"
+                                            fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="37"
+                                height="37"
+                                viewBox="0 0 37 37"
+                                fill="none">
+                                <path
+                                    d="M29.3224 7.66989C27.181 5.52944 24.453 4.07204 21.4833 3.482C18.5136 2.89195 15.4356 3.19576 12.6386 4.355C9.84158 5.51424 7.45111 7.47685 5.76948 9.99465C4.08786 12.5125 3.1906 15.4724 3.19116 18.5001C3.19116 22.5609 4.8038 26.4556 7.67452 29.3277C10.5452 32.1999 14.4391 33.8145 18.4999 33.8166C20.5095 33.8174 22.4997 33.4246 24.3582 32.6603C26.2109 31.8783 27.8961 30.7478 29.3224 29.3303C30.7448 27.9082 31.8731 26.2197 32.6429 24.3615C33.4128 22.5032 33.809 20.5115 33.809 18.5001C33.809 16.4887 33.4128 14.497 32.6429 12.6387C31.8731 10.7805 30.7448 9.09205 29.3224 7.66989ZM28.2432 28.2357C26.0387 30.4497 23.1461 31.847 20.0416 32.1978V22.0845H22.9399C23.3488 22.0845 23.7409 21.922 24.03 21.6329C24.3192 21.3438 24.4816 20.9517 24.4816 20.5428C24.4816 20.1339 24.3192 19.7418 24.03 19.4527C23.7409 19.1636 23.3488 19.0011 22.9399 19.0011H20.0416V14.777C20.0416 14.3681 20.204 13.976 20.4931 13.6869C20.7822 13.3977 21.1744 13.2353 21.5832 13.2353H23.4332C23.8421 13.2353 24.2342 13.0729 24.5234 12.7838C24.8125 12.4946 24.9749 12.1025 24.9749 11.6936C24.9749 11.2848 24.8125 10.8926 24.5234 10.6035C24.2342 10.3144 23.8421 10.152 23.4332 10.152H20.8124C19.7902 10.152 18.8099 10.558 18.0871 11.2808C17.3643 12.0036 16.9582 12.984 16.9582 14.0061V19.0011H14.0753C13.6665 19.0011 13.2743 19.1636 12.9852 19.4527C12.6961 19.7418 12.5337 20.1339 12.5337 20.5428C12.5337 20.9517 12.6961 21.3438 12.9852 21.6329C13.2743 21.922 13.6665 22.0845 14.0753 22.0845H16.9582V32.1978C14.0952 31.8712 11.4071 30.6533 9.27373 28.7162C7.14032 26.7791 5.66941 24.2207 5.06876 21.4024C4.4681 18.5841 4.76807 15.6483 5.92628 13.0097C7.08449 10.3711 9.04241 8.16304 11.5235 6.69744C14.0046 5.23184 16.8834 4.58276 19.7533 4.84189C22.6233 5.10101 25.3393 6.25525 27.5177 8.14156C29.6961 10.0279 31.2269 12.5509 31.8937 15.3543C32.5606 18.1577 32.3298 21.0997 31.2341 23.7649C30.5362 25.4349 29.5204 26.9533 28.2432 28.2357Z"
+                                    fill="black"
+                                    fill-opacity="0.5" />
+                            </svg>
+
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="38"
+                                height="37"
+                                viewBox="0 0 38 37"
+                                fill="none">
+                                <path
+                                    d="M18.9983 11.3728C17.0566 11.3728 15.1944 12.1239 13.8214 13.4607C12.4484 14.7976 11.677 16.6108 11.677 18.5015C11.677 20.3921 12.4484 22.2053 13.8214 23.5422C15.1944 24.8791 17.0566 25.6301 18.9983 25.6301C20.9401 25.6301 22.8023 24.8791 24.1753 23.5422C25.5483 22.2053 26.3197 20.3921 26.3197 18.5015C26.3197 16.6108 25.5483 14.7976 24.1753 13.4607C22.8023 12.1239 20.9401 11.3728 18.9983 11.3728ZM18.9983 23.1311C17.7369 23.1311 16.5271 22.6432 15.6351 21.7747C14.7431 20.9061 14.242 19.7282 14.242 18.4999C14.242 17.2717 14.7431 16.0937 15.6351 15.2252C16.5271 14.3567 17.7369 13.8688 18.9983 13.8688C20.2598 13.8688 21.4696 14.3567 22.3616 15.2252C23.2536 16.0937 23.7547 17.2717 23.7547 18.4999C23.7547 19.7282 23.2536 20.9061 22.3616 21.7747C21.4696 22.6432 20.2598 23.1311 18.9983 23.1311Z"
+                                    fill="black"
+                                    fill-opacity="0.5" />
+                                <path
+                                    d="M26.6094 12.7728C27.5521 12.7728 28.3163 12.0287 28.3163 11.1109C28.3163 10.193 27.5521 9.44897 26.6094 9.44897C25.6668 9.44897 24.9026 10.193 24.9026 11.1109C24.9026 12.0287 25.6668 12.7728 26.6094 12.7728Z"
+                                    fill="black"
+                                    fill-opacity="0.5" />
+                                <path
+                                    d="M32.5106 9.42123C32.1441 8.49959 31.5839 7.66262 30.866 6.9639C30.1482 6.26518 29.2884 5.72011 28.3417 5.36356C27.2339 4.95865 26.0635 4.73971 24.8805 4.71606C23.3558 4.65131 22.8728 4.63281 19.0063 4.63281C15.1398 4.63281 14.6443 4.63281 13.1322 4.71606C11.95 4.7385 10.7805 4.95749 9.67417 5.36356C8.72724 5.71969 7.86722 6.26462 7.14929 6.96339C6.43135 7.66217 5.87137 8.49935 5.50526 9.42123C5.08932 10.4998 4.86498 11.6394 4.84184 12.7913C4.77376 14.2744 4.75317 14.7446 4.75317 18.5109C4.75317 22.2756 4.75317 22.7551 4.84184 24.2305C4.86559 25.3836 5.08884 26.5214 5.50526 27.6021C5.8724 28.5237 6.43293 29.3605 7.15103 30.0592C7.86914 30.7579 8.72902 31.303 9.67576 31.6598C10.78 32.0809 11.95 32.3156 13.1353 32.3535C14.6601 32.4183 15.143 32.4383 19.0095 32.4383C22.876 32.4383 23.3716 32.4383 24.8837 32.3535C26.0666 32.3301 27.2369 32.1117 28.3448 31.7076C29.2913 31.3502 30.1508 30.8046 30.8686 30.1057C31.5864 29.4068 32.1467 28.5699 32.5138 27.6484C32.9302 26.5692 33.1534 25.4314 33.1772 24.2783C33.2453 22.7952 33.2658 22.325 33.2658 18.5587C33.2658 14.7924 33.2658 14.3145 33.1772 12.8391C33.1587 11.6709 32.9332 10.5147 32.5106 9.42123ZM30.5821 24.1164C30.5719 25.0049 30.4053 25.8851 30.0897 26.7187C29.8519 27.3182 29.4879 27.8626 29.021 28.3169C28.5542 28.7712 27.9949 29.1254 27.379 29.3565C26.5323 29.6625 25.6379 29.8246 24.7348 29.836C23.2307 29.9038 22.8063 29.9208 18.9493 29.9208C15.0892 29.9208 14.6949 29.9208 13.1623 29.836C12.2596 29.8252 11.3657 29.663 10.5197 29.3565C9.90168 29.1268 9.34009 28.7733 8.87125 28.3189C8.40241 27.8645 8.03675 27.3194 7.79792 26.7187C7.48671 25.894 7.32025 25.0242 7.30551 24.1457C7.23742 22.6811 7.22159 22.2679 7.22159 18.5124C7.22159 14.7554 7.22159 14.3715 7.30551 12.8776C7.31574 11.9897 7.48229 11.11 7.79792 10.2769C8.28084 9.06048 9.27042 8.1031 10.5197 7.63752C11.3661 7.33249 12.2598 7.17034 13.1623 7.15806C14.668 7.09177 15.0908 7.07327 18.9493 7.07327C22.8079 7.07327 23.2038 7.07327 24.7348 7.15806C25.638 7.16864 26.5325 7.33084 27.379 7.63752C27.9948 7.86919 28.5541 8.22367 29.0209 8.67819C29.4877 9.13272 29.8517 9.67726 30.0897 10.2769C30.4009 11.1016 30.5673 11.9714 30.5821 12.8499C30.6502 14.316 30.6676 14.7276 30.6676 18.4847C30.6676 22.2402 30.6676 22.6441 30.5995 24.1179H30.5821V24.1164Z"
+                                    fill="black"
+                                    fill-opacity="0.5" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <ul class="links">
+                        <li class="ul-title">Useful Links</li>
+                        <li class="links-item">
+                            <a href="" class="links-item-link">
+                                Our Projects
+                            </a>
+                        </li>
+                        <li class="links-item">
+                            <a href="" class="links-item-link">FAQ’s</a>
+                        </li>
+                        <li class="links-item">
+                            <a href="" class="links-item-link"
+                                >News and Updates</a
+                            >
+                        </li>
+                    </ul>
+
+                    <ul class="contacts">
+                        <li class="ul-title">Contacts</li>
+                        <li class="contacts-item">
+                            <p>Address: 4-5 Main road , Delhi</p>
+                        </li>
+                        <li class="contacts-item">
+                            <p>
+                                Email :
+                                <a href="maito:educare@gmail.com">
+                                    educare@gmail.com
+                                </a>
+                            </p>
+                        </li>
+                        <li class="contacts-item">
+                            <p>
+                                Phone Number:
+                                <a href="tel:+914533433265">+914 533 433 265</a>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="rights">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="29"
+                    viewBox="0 0 20 29"
+                    fill="none">
+                    <path
+                        d="M8.08 12.6392C8.13 12.1684 8.24 11.7547 8.38 11.4124C8.68 10.6135 9.19 10.1998 9.88 10.1855C10.33 10.1855 10.74 10.4708 11.03 10.8845C11.31 11.3268 11.5 11.9402 11.5 12.5536H13.3C13.28 11.8831 13.19 11.2697 13 10.6991C12.85 10.157 12.62 9.67198 12.32 9.27254C10.87 7.36097 8.18 7.63202 6.95 9.80037C5.66 12.1827 5.63 16.3482 6.94 18.7305C8.15 20.8561 10.8 21.1557 12.24 19.2584C12.55 18.9017 12.8 18.4595 13 17.9459C13.16 17.4324 13.27 16.8903 13.28 16.3054H11.5C11.5 16.605 11.43 16.876 11.34 17.1185C11.25 17.3896 11.13 17.6036 11 17.789C10.67 18.1599 10.28 18.3596 9.86 18.3596C9.5 18.3454 9.2 18.2455 8.97 18.0315C8.71076 17.8236 8.50425 17.504 8.38 17.1185C7.88 15.8347 7.96 14.0515 8.08 12.6392ZM10 0C4.5 0 0 6.41945 0 14.2655C0.53 33.1957 19.5 33.1814 20 14.2655C20 6.41945 15.5 0 10 0ZM10 25.6778C5.59 25.6778 2 20.5565 2 14.2655C2.44 -0.870192 17.56 -0.870192 18 14.2655C18 20.5565 14.41 25.6778 10 25.6778Z"
+                        fill="#7D7A74" />
+                </svg>
+                <h4>All Copyrights reserved</h4>
+            </div>
+        </footer>
+
+        <script src="./js/mustache-min.js"></script>
+
+        <script src="./js/index.js" type="module"></script>
+    </body>
+</html>

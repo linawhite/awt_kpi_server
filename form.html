@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="keywords"
+            content="harvard, education, univeristies, chance, opportunity, learning, study, student, usa, america, world, best, benefit, education, science, qualification, professionalism, expertise, competitiveness" />
+        <title>Visitor Opinion Form</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            form {
+                background-color: #fff;
+                margin: 50px;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                width: 400px;
+            }
+
+            label {
+                display: inline;
+                margin-bottom: 8px;
+            }
+
+            input,
+            textarea {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 16px;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            input:required {
+                border-color: #ff0000; /* Red border for required fields */
+            }
+
+            input:optional {
+                border-color: #ccc; /* Default border color for optional fields */
+            }
+
+            input:valid {
+                border-color: #00ff00; /* Green border for valid fields */
+            }
+
+            input:invalid {
+                border-color: #ff0000; /* Red border for invalid fields */
+            }
+
+            button {
+                background-color: #4caf50;
+                color: #fff;
+                padding: 10px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            button[type="reset"] {
+                background-color: #f44336;
+            }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+            .radio-wrapper {
+                width: 250px;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .radio-wrapper input {
+                width: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <form id="feedback-form">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="imageURL">Image URL:</label>
+            <input type="url" id="imageURL" name="imageURL" />
+
+            <p>Please select your occupation:</p>
+            <div class="radio-wrapper">
+                <label for="student">Student</label>
+
+                <input
+                    type="radio"
+                    id="student"
+                    name="occupation"
+                    value="Student" />
+            </div>
+            <div class="radio-wrapper">
+                <label for="worker">Worker</label>
+
+                <input
+                    type="radio"
+                    id="worker"
+                    name="occupation"
+                    value="Worker" />
+            </div>
+
+            <div class="radio-wrapper">
+                <label for="working-student">A worker and a student</label>
+
+                <input
+                    type="radio"
+                    id="working-student"
+                    name="occupation"
+                    value="A worker and a student" />
+            </div>
+
+            <p>Please select your age:</p>
+            <div class="radio-wrapper">
+                <label for="age1">0 - 30</label>
+                <input type="radio" id="age1" name="age" value="30" />
+            </div>
+            <div class="radio-wrapper">
+                <label for="age2">31 - 60</label><br />
+                <input type="radio" id="age2" name="age" value="60" />
+            </div>
+            <div class="radio-wrapper">
+                <label for="age3">61 - 100</label><br /><br />
+                <input type="radio" id="age3" name="age" value="100" />
+            </div>
+
+            <label>Choose languages which you speak:</label>
+
+            <br /><br />
+
+            <div class="radio-wrapper">
+                <label for="english">English</label>
+                <input type="checkbox" id="english" name="english" checked />
+            </div>
+
+            <div class="radio-wrapper">
+                <label for="slovak">Slovak</label>
+                <input type="checkbox" id="slovak" name="slovak" />
+            </div>
+
+            <label for="opinion">Your Opinion:</label>
+            <textarea id="opinion" name="opinion" rows="4" required></textarea>
+
+            <label for="keywords">Keywords:</label>
+            <input
+                type="text"
+                id="keywords"
+                name="keywords"
+                list="keywordList" />
+            <datalist id="keywordList">
+                <option value="harvard"></option>
+                <option value="education"></option>
+                <option value="universities"></option>
+                <option value="chance"></option>
+                <option value="opportunity"></option>
+                <option value="learning"></option>
+                <option value="study"></option>
+                <option value="student"></option>
+                <option value="usa"></option>
+                <option value="america"></option>
+                <option value="world"></option>
+                <option value="best"></option>
+                <option value="benefit"></option>
+                <option value="education"></option>
+                <option value="science"></option>
+                <option value="qualification"></option>
+                <option value="professionalism"></option>
+                <option value="expertise"></option>
+                <option value="competitiveness"></option>
+            </datalist>
+
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+        </form>
+
+        <div class="user-info"></div>
+
+        <script src="./mustache.js"></script>
+
+        <script src="./script.js"></script>
+    </body>
+</html>
